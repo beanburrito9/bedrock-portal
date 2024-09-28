@@ -1,3 +1,5 @@
+This fork adds a module that allows you to periodically create Looking for Group posts using accounts supplied in the multipleAccounts module.
+
 # BedrockPortal
 [![NPM version](https://img.shields.io/npm/v/bedrock-portal.svg)](http://npmjs.com/package/bedrock-portal)
 [![Discord](https://img.shields.io/badge/chat-on%20discord-brightgreen.svg)](https://discord.gg/KTyd9HWuBD)
