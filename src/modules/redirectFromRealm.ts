@@ -12,10 +12,46 @@ export default class RedirectFromRealm extends Module {
 
   public heartbeat: NodeJS.Timeout | null = null
 
+  public options: {
+    /**
+     * The client options to use when connecting to the Realm. These are passed directly to a [bedrock-protocol createClient](https://github.com/PrismarineJS/bedrock-protocol/blob/master/docs/API.md#becreateclientoptions--client)
+     * @type {ClientOptions}
+     * @default {}
+     */
+    clientOptions: any,
+    /**
+     * The device OS to use when connecting to the Realm. This is passed directly to a [bedrock-protocol createClient](https://github.com/PrismarineJS/bedrock-protocol/blob/master/docs/API.md#becreateclientoptions--client)
+     * @default 7 // = Windows
+    */
+    overideDeviceOS: number,
+    /**
+     * Options for the chat command
+     * @type {object}
+     */
+    chatCommand: {
+      /**
+       * Whether sending the command in chat should trigger an invite
+       * @default true
+      */
+      enabled: boolean,
+      /**
+       * The message to send in chat to run the command
+       * @default 'invite'
+      */
+      cooldown: number,
+      /**
+       * The cooldown between being able to send the command in chat
+       * @default 60000
+      */
+      message: string,
+    },
+  }
+
   constructor() {
     super('redirectFromRealm', 'Automatically invite players to the server when they join a Realm')
     this.options = {
       clientOptions: { }, // Options for the bedrock-protocol client
+      overideDeviceOS: 7,
       chatCommand: {
         enabled: true,
         cooldown: 60000,
@@ -46,6 +82,8 @@ export default class RedirectFromRealm extends Module {
     return new Promise<any>((resolve, reject) => {
 
       this.client = this.bedrock.createClient(options)
+
+      if (this.options.overideDeviceOS) this.client.session.deviceOS = this.options.overideDeviceOS
 
       this.client.once('error', (e: any) => (this.client = null, reject(e)))
 
